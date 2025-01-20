@@ -1,20 +1,53 @@
 /* Google Fonts 적용 */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
-/* 기본 스타일 */
+/* 기본 스타일 초기화 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
+/* Body 스타일 */
 body {
-    background: linear-gradient(to bottom, #F4F9FC, #E9F7FE);
-    height: 100vh;
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    /* 부드러운 그라디언트 배경 + 상단 파형 */
+    background: linear-gradient(135deg, #FDFBFB 0%, #EBEDEE 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
-    overflow: hidden;
+    color: #333;
+}
+/* 파형(물결) 효과를 위해 가상 요소 사용 */
+/* 기존 초록색(#5A9D8B)을 로그인 폼에 어울리는 보라색(#5865F2)으로 변경 */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 250px;
+    background: #5865F2; /* 변경된 색상 */
+    clip-path: ellipse(70% 50% at 50% 0%);
+    z-index: -1; /* 로그인 박스가 이 위에 올라오도록 뒤로 보냄 */
+}
+@keyframes floating {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+/* 2) 추가적인 파형(ellipse) 스타일 (배경에 다른 레이어) */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 220px; /* 원하는 높이로 조절 */
+    background: #5865F2; /* 파형 색상 (버튼 컬러 계열) */
+    clip-path: ellipse(75% 60% at 50% 0%);
+    z-index: -1; /* 라디얼 그라디언트보다 위에 */
+    opacity: 0.1; /* 너무 튀지 않도록 살짝만 보이게 조절 */
 }
 /* 로그인 컨테이너 */
 .login-container {
@@ -24,22 +57,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-/* 배경 스타일 */
-body::before {
-    content: '';
-    position: absolute;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent);
-    animation: floating 5s infinite ease-in-out;
-    top: -25%;
-    left: -25%;
-    z-index: -1;
-}
-@keyframes floating {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
 }
 /* 로그인 박스 */
 .login-box {
@@ -56,23 +73,29 @@ body::before {
 .login-box h1 {
     font-size: 24px;
     color: white;
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* 기존보다 살짝 여백 늘림 */
     font-weight: 600;
 }
 /* 입력 필드 */
 .txtb {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
+    margin: 12px 0; /* 필드 간 간격 */
     background: #1E2034;
     border: none;
     color: white;
     border-radius: 8px;
     outline: none;
     font-size: 14px;
+    transition: box-shadow 0.3s;
 }
 .txtb::placeholder {
     color: #aaa;
+}
+/* 포커스 시 강조 효과 */
+.txtb:focus {
+    background-color: #2D2F4C;
+    box-shadow: 0 0 5px rgba(88, 101, 242, 0.3); /* 파란빛 그림자 */
 }
 /* 로그인 버튼 */
 .login-btn {
@@ -85,10 +108,16 @@ body::before {
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.3s;
+    margin-top: 14px; /* 버튼 위 여백 */
 }
 .login-btn:hover {
     background: #4851C6;
+    transform: translateY(-2px); /* 살짝 상승 */
+}
+.login-btn:active {
+    background: #3D45A1;
+    transform: translateY(0);
 }
 /* 비밀번호 찾기 링크 */
 .forgot-password {
@@ -101,4 +130,30 @@ body::before {
 }
 .forgot-password:hover {
     color: #ddd;
+}
+/* (선택) 에러 메시지 박스 - 필요 시 활용 */
+.error-box {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #F8D7DA;
+    color: #721C24;
+    border-radius: 6px;
+    font-size: 14px;
+}
+/* 반응형 대응 */
+@media (max-width: 480px) {
+    .login-box {
+        padding: 30px;
+    }
+    .login-box h1 {
+        font-size: 20px;
+    }
+    .txtb {
+        padding: 10px;
+        font-size: 13px;
+    }
+    .login-btn {
+        padding: 10px;
+        font-size: 15px;
+    }
 }
