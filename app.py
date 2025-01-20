@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
 from docx import Document
 from docx2pdf import convert
 from datetime import datetime
@@ -8,12 +8,12 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from utils.slack import send_to_slack, send_to_slack_with_file
 from utils.email import send_certificate_email
-
+import pandas as pd
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
 SLACK_CHANNEL = os.getenv("SLACK_CHANNEL")
-REC_EMAIL = os.getenv("REC_EMAIL")
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -24,6 +24,18 @@ db = client['certificate_db']
 users_collection = db['users']
 login_logs_collection = db['login_logs']
 certificate_requests_collection = db['certificate_request_logs']
+
+
+
+ALLOWED_EXTENSIONS = {'xlsx'}
+
+UPLOAD_FOLDER = 'uploads'
+CERTIFICATE_FOLDER = 'certificates'
+CERTIFICATE_PDF_FOLDER = 'certificates_pdf'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 
@@ -120,7 +132,7 @@ def certificate_get():
     certificate_requests_collection.insert_one(certificate_request)
 
     # 저장 한 파일 사용자 이메일로 전송
-    send_certificate_email(REC_EMAIL, user['name'], pdf_path)
+    send_certificate_email(user['email'], user['name'], pdf_path)
 
     # Slack으로 사용자가 증명서 요청한 것 알림
     send_to_slack_with_file(SLACK_CHANNEL, pdf_path, user['name'], user['email'])
@@ -145,7 +157,7 @@ def add_user():
         # 입력값 가져오기
         user_data = {
             "user_id": request.form['user_id'],
-            "password": request.form['password'],
+            "password": str(request.form['password']),
             "name": request.form['name'],
             "email": request.form['email'],
             "course": request.form['course'],
@@ -210,6 +222,59 @@ def user_logs():
     return render_template('user_logs.html', login_logs=login_logs_list, certificate_logs=request_logs_list)
 
 
+@app.route('/upload_xlsx', methods=['POST'])
+def upload_xlsx():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        try:
+            df = pd.read_excel(file_path)
+
+            df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce').dt.strftime('%Y-%m-%d')
+            df['end_date'] = pd.to_datetime(df['end_date'], errors='coerce').dt.strftime('%Y-%m-%d')
+            
+            df = df.dropna(subset=['start_date', 'end_date'])
+        
+            data = []
+            for _, row in df.iterrows():
+                
+                document = {
+                    "user_id": row['user_id'],
+                    "password": str(row['password']), 
+                    "name": row['name'],
+                    "email": row['email'],
+                    "course": row['course'],
+                    "startDate": row['start_date'], 
+                    "endDate": row['end_date'],      
+                    "role": row['role']
+                }
+                
+                data.append(document)
+
+            users_collection.insert_many(data)
+
+            return jsonify({"message": "File successfully uploaded and data inserted into MongoDB"}), 200
+
+        except Exception as e:
+            return jsonify({"error": f"Error processing file: {str(e)}"}), 500
+
+    return jsonify({"error": "Invalid file format. Only .xlsx allowed."}), 400
 
 if __name__ == "__main__":
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    if not os.path.exists(CERTIFICATE_FOLDER):
+        os.makedirs(CERTIFICATE_FOLDER)
+    if not os.path.exists(CERTIFICATE_PDF_FOLDER):
+        os.makedirs(CERTIFICATE_PDF_FOLDER)
+
     app.run(debug=True)
