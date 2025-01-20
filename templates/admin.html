@@ -32,25 +32,26 @@
                 <div>
                     <strong>이메일:  </strong>
                     <input type="text" class="editable" value="{{ user.email }}" disabled>
-                    <button class="btn modify">수정</button>
                 </div>
                 <div>
                     <strong>ID:  </strong>
                     <input type="text" class="editable" value="{{ user.user_id }}" disabled>
-                    <button class="btn modify">수정</button>
                 </div>
                 <div>
                     <strong>수강명:  </strong>
                     <input type="text" class="editable" value="{{ user.course }}" disabled>
-                    <button class="btn modify">수정</button>
                 </div>
                 <div>
                     <strong>비밀번호 변경:  </strong>
                     <input type="password" class="editable" placeholder="새 비밀번호" disabled>
-                    <button class="btn modify">수정</button>
                 </div>
-                <div class="delete-btn">
-                    <button class="btn" onclick="deleteUser('{{ user._id }}')">사용자 삭제</button>
+                <div class="btn-wrapper">
+                    <div class="logs-btn">
+                        <a href="{{ url_for('user_logs') }}?user_db_id={{ user._id }}"><button class="btn">사용자 로그</button></a>
+                    </div>
+                    <div class="delete-btn">
+                        <a href="{{ url_for('delete_user') }}?user_db_id={{ user._id }}"><button class="btn">사용자 삭제</button></a>
+                    </div>
                 </div>
             </div>
             {% endfor %}

@@ -11,7 +11,7 @@ dummy_users = [
     {
         "user_id": "yun",
         "password": "1234",  # You may want to hash the password in a real app
-        "name": "Yun Ki",
+        "name": "YunKi",
         "email": "yun@gmail.com",
         "course": "Python",
         "startDate": datetime(2022, 6, 12).strftime('%Y-%m-%d'),
@@ -21,7 +21,7 @@ dummy_users = [
     {
         "user_id": "kim",
         "password": "1111",
-        "name": "Kim Hun",
+        "name": "KimHun",
         "email": "kim.hun@example.com",
         "course": "Network",
         "startDate": datetime(2022, 6, 12).strftime('%Y-%m-%d'),

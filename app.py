@@ -161,5 +161,55 @@ def add_user():
 
     return render_template('add_user.html')
 
+
+@app.route('/delete_user', methods=['GET'])
+def delete_user():
+
+    user_db_id = request.args.get('user_db_id')
+    
+    if user_db_id:
+
+        try:
+            user_id = ObjectId(user_db_id)
+        except Exception as e:
+            return f"Invalid user_db_id format: {e}", 400
+        
+
+        result = users_collection.delete_one({'_id': user_id})
+        
+        if result.deleted_count == 1:
+            return redirect(url_for('admin_get'))
+        else:
+            return "User not found or deletion failed", 404
+    else:
+        return "user_db_id is required", 400
+
+
+@app.route('/user_logs', methods=['GET'])
+def user_logs():
+    
+    user_db_id = request.args.get('user_db_id')
+    
+    if not user_db_id:
+        return "user_db_id is required", 400
+    
+
+    try:
+        user_id = user_db_id
+    except Exception as e:
+        return f"Invalid user_db_id format: {e}", 400
+    
+
+    login_logs = login_logs_collection.find({'user_db_id': user_id})
+
+    login_logs_list = list(login_logs)
+
+    request_logs = certificate_requests_collection.find({'user_db_id': user_id})
+    request_logs_list = list(request_logs)
+
+    return render_template('user_logs.html', login_logs=login_logs_list, certificate_logs=request_logs_list)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)

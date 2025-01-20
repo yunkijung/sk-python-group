@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h1 class="admin-title">로그 기록</h1>
+
+        <!-- 로그인 이력 -->
+        <div class="log-section">
+            <h2 class="log-title">로그인 이력</h2>
+            <div class="log-list">
+                {% if login_logs %}
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>사용자 ID</th>
+                                <th>로그인 시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in login_logs %}
+                                <tr>
+                                    <td>{{ log.user_db_id }}</td>
+                                    <td>{{ log.login_time }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-logs">로그인 이력이 없습니다.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 증명서 출력 이력 -->
+        <div class="log-section">
+            <h2 class="log-title">증명서 출력 이력</h2>
+            <div class="log-list">
+                {% if certificate_logs %}
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>사용자 이름</th>
+                                <th>출력 요청 시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in certificate_logs %}
+                                <tr>
+                                    <td>{{ log.user_name }}</td>
+                                    <td>{{ log.request_time }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-logs">증명서 출력 이력이 없습니다.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
