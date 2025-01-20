@@ -1,0 +1,216 @@
+/* 전체 페이지 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #f4f9fc, #e9f7fe);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 40px;
+}
+
+/* 카드 스타일 공통 */
+.card {
+    width: 90%;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+/* 1. 축하 메시지 카드 */
+.celebration-card {
+    background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+    color: white;
+    overflow: hidden;
+}
+
+.celebration-card h1 {
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.celebration-card p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+/* 폭죽 애니메이션 */
+.firework {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, white 30%, transparent 70%);
+    border-radius: 50%;
+    animation: firework 1.5s infinite;
+}
+
+.firework:nth-child(1) { top: 10%; left: 20%; animation-delay: 0.1s; }
+.firework:nth-child(2) { top: 15%; right: 15%; animation-delay: 0.3s; }
+.firework:nth-child(3) { bottom: 20%; left: 25%; animation-delay: 0.5s; }
+.firework:nth-child(4) { bottom: 10%; right: 30%; animation-delay: 0.7s; }
+
+@keyframes firework {
+    0% { transform: scale(0.5); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.8; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* 수료증 카드 스타일 */
+.certificate-card {
+    background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+    border: 1px solid #dce8f7;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.certificate-card h2 {
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    color: #0056b3;
+}
+
+.certificate-card p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.user-info {
+    margin: 20px 0;
+    background: #f7fbff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.user-info div {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
+    color: #333;
+}
+
+.user-info div strong {
+    font-weight: bold;
+    color: #0056b3;
+}
+
+.user-info div span {
+    color: #555;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background: linear-gradient(to right, #007bff, #00b3ff);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.5);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.7);
+}
+
+.issued-info {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #555;
+    text-align: center;
+}
+
+
+/* 3. 추천 과정 카드 */
+.recommendation-card {
+    background: linear-gradient(to bottom, #e8f7ee, #ffffff);
+    border: 1px solid #cce7d0;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-card h2 {
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    color: #2e7d32;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-card p {
+    font-size: 1.2em;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.course-info {
+    background: #f0f9f3;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: left;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.course-info .course-period,
+.course-info .course-details {
+    margin-bottom: 15px;
+}
+
+.course-info strong {
+    font-size: 1.2em;
+    color: #2e7d32;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.course-info span {
+    font-size: 1em;
+    color: #555;
+}
+
+.course-info ul {
+    margin: 10px 0 0;
+    padding-left: 20px;
+    color: #555;
+    font-size: 1em;
+}
+
+.course-info ul li {
+    margin-bottom: 10px;
+    list-style-type: disc;
+}
+
+/* 추천 과정 버튼 */
+.recommendation-card .btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background: linear-gradient(to right, #66bb6a, #43a047);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 20px rgba(67, 160, 71, 0.5);
+}
+
+.recommendation-card .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(67, 160, 71, 0.7);
+}
