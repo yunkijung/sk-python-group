@@ -1,0 +1,227 @@
+
+    /* 전체 페이지 스타일 */
+    body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #1e1e2f;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px;
+}
+
+/* 폭죽 애니메이션 배경 */
+.firework {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle, white 50%, transparent 100%);
+    border-radius: 50%;
+    animation: explode 2s infinite;
+    opacity: 0;
+}
+
+.firework:nth-child(1) { top: 30%; left: 40%; animation-delay: 0.2s; }
+.firework:nth-child(2) { top: 20%; left: 60%; animation-delay: 0.5s; }
+.firework:nth-child(3) { top: 50%; left: 30%; animation-delay: 1s; }
+.firework:nth-child(4) { top: 70%; left: 50%; animation-delay: 1.5s; }
+.firework:nth-child(5) { top: 40%; left: 80%; animation-delay: 2s; }
+
+@keyframes explode {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(5);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* 메인 컨테이너 */
+.admin-container {
+    width: 90%;
+    max-width: 800px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    text-align: left;
+    position: relative;
+    z-index: 1;
+}
+
+.admin-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #0056b3;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 제목 스타일 */
+.admin-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #0056b3;
+    margin-bottom: 30px; /* 여백 추가 */
+    text-align: center;
+}
+
+/* 사용자 목록 */
+.user-list {
+    margin: 20px 0;
+}
+
+.user-dropdown {
+    background: #f8f9fc;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px; /* 타일 간 여백 추가 */
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-dropdown:hover {
+    background: #e3f2fd;
+}
+
+.user-dropdown .user-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.user-dropdown .dropdown-arrow {
+    font-size: 1.5em;
+    color: #555;
+}
+
+/* 사용자 세부 정보 항목 */
+.user-details {
+    display: none;
+    background: #f4f6f9; /* 배경색 복원 */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-top: 10px;
+}
+
+/* 사용자 세부 정보 항목 */
+.user-details div {
+    margin-bottom: 20px;
+    font-size: 1em;
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center;
+}
+
+.user-details div strong {
+    color: #555;
+    width: 150px; /* 제목의 고정 너비 */
+    text-align: right; /* 텍스트 오른쪽 정렬 */
+    margin-right: 20px; /* 입력 필드와 간격 추가 */
+}
+
+.user-details div input.editable {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    border-radius: 5px;
+    width: 60%; /* 입력 필드 너비 통일 */
+    max-width: 400px; /* 최대 너비 설정 */
+    margin-right: 20px; /* 수정 버튼과 간격 추가 */
+}
+
+.user-details div input.editable[disabled] {
+    background: #e9ecef;
+    border: none;
+}
+
+/* 수정 버튼 */
+.btn.modify {
+    background: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    border: none;
+    transition: background 0.3s;
+}
+
+.btn.modify:hover {
+    background: #0056b3;
+}
+
+
+/* 텍스트 입력 활성화 */
+input.editable {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    width: 60%;
+}
+
+input.editable[disabled] {
+    background: #e9ecef;
+    border: none;
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+    margin-top: 60px; /* 위쪽 여백 추가 */
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+    padding-left: 70%; /* 오른쪽 간격 추가 */
+}
+
+.delete-btn .btn {
+    background: #ff6b6b;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+}
+
+.delete-btn .btn:hover {
+    background: #c62828;
+    transform: scale(1.05);
+}
+
+/* 사용자 추가 버튼 */
+.add-user {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.add-user .btn {
+    background: #66bb6a;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.add-user .btn:hover {
+    background: #43a047;
+}

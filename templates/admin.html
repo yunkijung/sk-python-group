@@ -1,35 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+    <title>관리자 페이지</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
 </head>
 <body>
-    <h1>All Users</h1>
+    <div class="admin-container">
+        <!-- 폭죽 효과 -->
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+        <!-- 관리자 컨테이너 -->
+        <div class="admin-container">
+            <h1 class="admin-title">사용자 관리</h1>
+            <!-- 기존 내용 유지 -->
+        </div>
+
+        <!-- 사용자 목록 -->
+        <div class="user-list">
             {% for user in users %}
-                <tr>
-                    <td>{{ user['user_id'] }}</td>
-                    <td>{{ user['name'] }}</td>
-                    <td>{{ user['email'] }}</td>
-                    <td>
-                        <a href="#">Edit</a> | <a href="#">Delete</a>
-                    </td>
-                </tr>
+            <div class="user-dropdown">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="user-details">
+                <div>
+                    <strong>이메일:  </strong>
+                    <input type="text" class="editable" value="{{ user.email }}" disabled>
+                    <button class="btn modify">수정</button>
+                </div>
+                <div>
+                    <strong>ID:  </strong>
+                    <input type="text" class="editable" value="{{ user.user_id }}" disabled>
+                    <button class="btn modify">수정</button>
+                </div>
+                <div>
+                    <strong>수강명:  </strong>
+                    <input type="text" class="editable" value="{{ user.course }}" disabled>
+                    <button class="btn modify">수정</button>
+                </div>
+                <div>
+                    <strong>비밀번호 변경:  </strong>
+                    <input type="password" class="editable" placeholder="새 비밀번호" disabled>
+                    <button class="btn modify">수정</button>
+                </div>
+                <div class="delete-btn">
+                    <button class="btn" onclick="deleteUser('{{ user._id }}')">사용자 삭제</button>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
 
+        <!-- 사용자 추가 -->
+        <div class="add-user">
+            <a href="{{ url_for('add_user') }}" class="btn">사용자 추가</a>
+        </div>
+    
+            <!-- 사용자 추가 폼 -->
+            <!-- <div class="add-user-form" id="addUserForm">
+                <div>
+                    <label for="userId">ID:</label>
+                    <input type="text" id="userId" placeholder="사용자 ID">
+                </div>
+                <div>
+                    <label for="userPw">비밀번호:</label>
+                    <input type="password" id="userPw" placeholder="비밀번호">
+                </div>
+                <div>
+                    <label for="userName">이름:</label>
+                    <input type="text" id="userName" placeholder="이름">
+                </div>
+                <div>
+                    <label for="userEmail">이메일:</label>
+                    <input type="email" id="userEmail" placeholder="이메일">
+                </div>
+                <div>
+                    <label for="userCourse">수강명:</label>
+                    <input type="text" id="userCourse" placeholder="수강명">
+                </div>
+                <div>
+                    <label for="courseStart">수강 시작일:</label>
+                    <input type="date" id="courseStart">
+                </div>
+                <div>
+                    <label for="courseEnd">수강 종료일:</label>
+                    <input type="date" id="courseEnd">
+                </div>
+                <div>
+                    <label for="userRole">역할:</label>
+                    <select id="userRole">
+                        <option value="student">Student</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="submit-btn">
+                    <button class="btn-submit">저장</button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <script>
+        // 드롭다운 토글
+        const dropdowns = document.querySelectorAll('.user-dropdown');
+        dropdowns.forEach((dropdown) => {
+            dropdown.addEventListener('click', () => {
+                const details = dropdown.nextElementSibling;
+                details.style.display = details.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+
+        // 수정 버튼 클릭 이벤트
+        const modifyButtons = document.querySelectorAll('.btn.modify');
+        modifyButtons.forEach((button) => {
+            button.addEventListener('click', (event) => {
+                const input = event.target.previousElementSibling;
+                if (input.disabled) {
+                    input.disabled = false;
+                    input.focus();
+                    button.textContent = '저장';
+                } else {
+                    input.disabled = true;
+                    button.textContent = '수정';
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>

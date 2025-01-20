@@ -1,78 +1,104 @@
-/* Google Fonts 적용 (한글 및 영문 지원) */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
-
+/* Google Fonts 적용 */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 /* 기본 스타일 */
 * {
-    font-family: "Noto Sans KR", sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
 }
-
 body {
-    background: white; /* 어두운 배경 */
+    background: linear-gradient(to bottom, #F4F9FC, #E9F7FE);
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     color: white;
+    overflow: hidden;
 }
-
-/* 로그인 박스 스타일 */
-.login-box {
-    background: #21e047; /* 단색 초록색 배경 */
-    padding: 40px 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+/* 로그인 컨테이너 */
+.login-container {
+    position: relative;
     width: 100%;
-    max-width: 400px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* 배경 스타일 */
+body::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent);
+    animation: floating 5s infinite ease-in-out;
+    top: -25%;
+    left: -25%;
+    z-index: -1;
+}
+@keyframes floating {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+/* 로그인 박스 */
+.login-box {
+    background: #2C2F48;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
     text-align: center;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
 }
-
 /* 제목 스타일 */
-.login-form h1 {
+.login-box h1 {
     font-size: 24px;
+    color: white;
     margin-bottom: 20px;
-    font-weight: 700;
-    color: #fff;
+    font-weight: 600;
 }
-
-/* 입력 필드 스타일 */
+/* 입력 필드 */
 .txtb {
     width: 100%;
-    padding: 15px;
+    padding: 12px;
     margin: 10px 0;
-    background: #ffffff28; /* 반투명한 배경 */
-    border: 1px solid #48c774; /* 초록 테두리 */
+    background: #1E2034;
+    border: none;
     color: white;
-    border-radius: 5px;
+    border-radius: 8px;
     outline: none;
-    text-align: center;
-}
-
-.txtb::placeholder {
-    color: #ddd;
     font-size: 14px;
 }
-
-/* 버튼 스타일 */
+.txtb::placeholder {
+    color: #aaa;
+}
+/* 로그인 버튼 */
 .login-btn {
     width: 100%;
-    padding: 15px;
-    background: #48c774; /* 밝은 초록색 버튼 */
+    padding: 12px;
+    background: #5865F2;
     border: none;
     color: white;
     font-size: 16px;
     font-weight: 600;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s;
 }
-
 .login-btn:hover {
-    background: #3aa964; /* 버튼 호버 시 더 어두운 초록색 */
+    background: #4851C6;
 }
-
-.error-box {
-    padding: 14px;
+/* 비밀번호 찾기 링크 */
+.forgot-password {
+    display: block;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.forgot-password:hover {
+    color: #ddd;
 }

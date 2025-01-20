@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 추가</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='add_user.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h1 class="admin-title">사용자 추가</h1>
+
+        <form class="add-user-form" method="POST" action="/add_user">
+            <div>
+                <label for="userId">ID:</label>
+                <input type="text" id="userId" name="user_id" placeholder="사용자 ID" required>
+            </div>
+            <div>
+                <label for="userPw">비밀번호:</label>
+                <input type="password" id="userPw" name="password" placeholder="비밀번호" required>
+            </div>
+            <div>
+                <label for="userName">이름:</label>
+                <input type="text" id="userName" name="name" placeholder="이름" required>
+            </div>
+            <div>
+                <label for="userEmail">이메일:</label>
+                <input type="email" id="userEmail" name="email" placeholder="이메일" required>
+            </div>
+            <div>
+                <label for="userCourse">수강명:</label>
+                <input type="text" id="userCourse" name="course" placeholder="수강명" required>
+            </div>
+            <div>
+                <label for="courseStart">수강 시작일:</label>
+                <input type="date" id="courseStart" name="start_date" required>
+            </div>
+            <div>
+                <label for="courseEnd">수강 종료일:</label>
+                <input type="date" id="courseEnd" name="end_date" required>
+            </div>
+            <div>
+                <label for="userRole">역할:</label>
+                <select id="userRole" name="role" required>
+                    <option value="student">학생</option>
+                    <option value="admin">관리자</option>
+                </select>
+            </div>
+            <div class="submit-btn">
+                <button class="btn-submit" type="submit">저장</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

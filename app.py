@@ -6,9 +6,14 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import requests
+from utils.slack import send_to_slack, send_to_slack_with_file
+from utils.email import send_certificate_email
+
 
 load_dotenv()
+
+SLACK_CHANNEL = os.getenv("SLACK_CHANNEL")
+REC_EMAIL = os.getenv("REC_EMAIL")
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -20,7 +25,7 @@ users_collection = db['users']
 login_logs_collection = db['login_logs']
 certificate_requests_collection = db['certificate_request_logs']
 
-SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL')
+
 
 @app.route('/', methods=['GET'])
 def home_get():
@@ -47,10 +52,7 @@ def login_post():
         print(user["_id"])
 
         # Slack으로 사용자 로그인 알림
-        # slack_message = {
-        #     "text": f"User {user_id} logged in at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        # }
-        # requests.post(SLACK_WEBHOOK_URL, json=slack_message)
+        send_to_slack(SLACK_CHANNEL, user['user_id'])
 
         # certificate_request.html 반환 (사용자 ID 전달)
         if user["role"] == "admin":
@@ -58,7 +60,7 @@ def login_post():
         else:
             current_date = datetime.now().strftime('%Y-%m-%d')
             return render_template("certificate_request.html", user_info=user, user_db_id=str(user["_id"]), current_date=current_date)
-            # return render_template("certificate_request.html", user_name=user.get("name", ""), user_db_id=str(user["_id"]))
+
 
     else:
         flash('Invalid username or password.', 'error')
@@ -118,8 +120,10 @@ def certificate_get():
     certificate_requests_collection.insert_one(certificate_request)
 
     # 저장 한 파일 사용자 이메일로 전송
+    send_certificate_email(REC_EMAIL, user['name'], pdf_path)
 
     # Slack으로 사용자가 증명서 요청한 것 알림
+    send_to_slack_with_file(SLACK_CHANNEL, pdf_path, user['name'], user['email'])
 
     # 사용자에게 파일 다운로드 보냄
     return send_file(pdf_path, as_attachment=True)
@@ -135,7 +139,27 @@ def admin_get():
 
     return render_template("admin.html", users=users_list)
 
+@app.route('/add_user', methods=['GET', 'POST'])
+def add_user():
+    if request.method == 'POST':
+        # 입력값 가져오기
+        user_data = {
+            "user_id": request.form['user_id'],
+            "password": request.form['password'],
+            "name": request.form['name'],
+            "email": request.form['email'],
+            "course": request.form['course'],
+            "startDate": request.form['start_date'],
+            "endDate": request.form['end_date'],
+            "role": request.form['role']
+        }
 
+        # 사용자 데이터 DB에 삽입
+        users_collection.insert_one(user_data)
+        flash('사용자가 성공적으로 추가되었습니다.', 'success')
+        return redirect(url_for('admin_get'))
+
+    return render_template('add_user.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
