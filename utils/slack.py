@@ -10,6 +10,25 @@ SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")
 SLACK_CHANNEL = os.getenv("SLACK_CHANNEL")
 # 채널 접근 후 URL 뒤에서 확인 가능
 
+def send_to_slack_for_xlsx(channel, file_path):
+    # WebClient 인스턴스 생성
+    client = WebClient(token=SLACK_API_TOKEN)
+    
+    message = f"😊  {file_path}가 업로드 되었습니다."
+
+    try:
+        response = client.files_upload_v2(
+            channel=channel, 
+            file=file_path,
+            initial_comment=message
+        )
+        # 업로드 성공 메시지 출력
+        print("File uploaded successfully:", response["file"]["name"])
+    
+    except SlackApiError as e:
+        # 에러 처리
+        print("Error sending/uploading message:", e.response["error"])
+
 def send_to_slack_with_file(channel, file_path, name, email):
     # WebClient 인스턴스 생성
     client = WebClient(token=SLACK_API_TOKEN)

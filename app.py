@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-from utils.slack import send_to_slack, send_to_slack_with_file
-from utils.email import send_certificate_email
+from utils.slack import send_to_slack, send_to_slack_with_file, send_to_slack_for_xlsx
+from utils.email import send_certificate_email, send_notification_email
 import pandas as pd
 from werkzeug.utils import secure_filename
 
@@ -169,6 +169,8 @@ def add_user():
         # 사용자 데이터 DB에 삽입
         users_collection.insert_one(user_data)
         flash('사용자가 성공적으로 추가되었습니다.', 'success')
+
+        send_notification_email(user_data['email'], user_data['name'])
         return redirect(url_for('admin_get'))
 
     return render_template('add_user.html')
@@ -261,6 +263,11 @@ def upload_xlsx():
                 data.append(document)
 
             users_collection.insert_many(data)
+
+            for student in data:
+                send_notification_email(student['email'], student['name'])
+
+            send_to_slack_for_xlsx(SLACK_CHANNEL, file_path)
 
             return jsonify({"message": "File successfully uploaded and data inserted into MongoDB"}), 200
 
