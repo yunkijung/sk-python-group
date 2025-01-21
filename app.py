@@ -10,11 +10,14 @@ from utils.slack import send_to_slack, send_to_slack_with_file, send_to_slack_fo
 from utils.email import send_certificate_email, send_notification_email
 import pandas as pd
 from werkzeug.utils import secure_filename
+import ftplib
 
 load_dotenv()
 
 SLACK_CHANNEL = os.getenv("SLACK_CHANNEL")
-
+FTP_ID = os.getenv("FTP_ID")
+FTP_PW = os.getenv("FTP_PW")
+FTP_HOST = os.getenv("FTP_HOST")
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
@@ -269,12 +272,54 @@ def upload_xlsx():
 
             send_to_slack_for_xlsx(SLACK_CHANNEL, file_path)
 
+            hostname = FTP_HOST
+            ftp = ftplib.FTP(hostname)
+            ftp.login(FTP_ID, FTP_PW)
+
+            with open(file_path, 'rb') as f:
+                ftp.storbinary('STOR ' + filename, f)
+
             return jsonify({"message": "File successfully uploaded and data inserted into MongoDB"}), 200
 
         except Exception as e:
             return jsonify({"error": f"Error processing file: {str(e)}"}), 500
 
     return jsonify({"error": "Invalid file format. Only .xlsx allowed."}), 400
+
+
+@app.route('/ftp', methods=['GET'])
+def ftp_get():
+    hostname = FTP_HOST  # Your FTP host (IP or domain)
+    ftp = ftplib.FTP(hostname)
+    ftp.login(FTP_ID, FTP_PW)
+
+    # List to store the processed file information
+    file_list = []
+
+    # Callback function to capture the lines of 'LIST' command
+    def handle_line(line):
+        # Split the line into parts (based on a UNIX-style 'ls -l' listing)
+        parts = line.split()
+        if len(parts) >= 9:
+            file_type = 'Directory' if parts[0].startswith('d') else 'File'
+            file_name = parts[8]  # File name is typically the 9th element
+            file_size = parts[4]  # File size is typically the 5th element
+
+            # Append a dictionary of processed data
+            file_list.append({
+                'type': file_type,
+                'name': file_name,
+                'size': file_size
+            })
+
+    # Retrieve the list of files from FTP using the 'LIST' command
+    ftp.retrlines('LIST', handle_line)
+
+    # Close FTP connection
+    ftp.quit()
+
+    # Render the template with the processed file_list
+    return render_template("ftp.html", file_list=file_list)
 
 if __name__ == "__main__":
     if not os.path.exists(UPLOAD_FOLDER):

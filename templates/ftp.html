@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP File List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ftp.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>FTP File List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>File Type</th>
+                <th>File Name</th>
+                <th>Size (in bytes)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in file_list %}
+            <tr>
+                <td>{{ file.type }}</td>
+                <td>{{ file.name }}</td>
+                <td>{{ file.size }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
